@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: "Simulador de Crédito API"
+  description: "API para simulação de crédito"
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /simulacao:
+    post:
+      summary: "Simulação de crédito"
+      operationId: createSimulation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulationRequest'
+      responses:
+        '202':
+          description: "Requisição aceita com sucesso"
+        '400':
+          description: "Erro de requisição"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: "Erro interno do servidor"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+
+components:
+  schemas:
+    SimulationRequest:
+      type: object
+      required:
+        - amount
+        - installments
+        - age
+      properties:
+        amount:
+          type: number
+          format: double
+          example: 10000.0
+          description: "Valor do crédito solicitado"
+        installments:
+          type: integer
+          example: 12
+          description: "Número de parcelas para pagamento"
+        age:
+          type: integer
+          example: 30
+          description: "Idade do solicitante"
+    GeneralErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "SC001"
+          description: "Códigos de erro para identificação de problemas"
+        message:
+          type: string
+          example: "Número de parcelas não pode ser menor que 6"
+          description: "Mensagem de erro detalhada"
